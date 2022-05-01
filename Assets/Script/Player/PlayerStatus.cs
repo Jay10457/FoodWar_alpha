@@ -57,6 +57,7 @@ public partial class PlayerController
         }
         GameBeginCountDown.instance.countDownText.gameObject.SetActive(false);
         _isGameStart = true;
+        //photonView.RPC("GetPos", RpcTarget.Others, rb.position, Vector3.zero, this.transform.rotation.eulerAngles.y);
 
         StartCoroutine(GameTimer());
 

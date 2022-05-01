@@ -86,7 +86,7 @@ public class ItemBox : MonoBehaviourPunCallbacks
         }
 
     }
-   
+   /*
     private void OnTriggerEnter(Collider other)
     {
         
@@ -97,8 +97,9 @@ public class ItemBox : MonoBehaviourPunCallbacks
         
         
     }
+   */
 
-    void RandomWeapon()
+    public void RandomWeapon()
     {
         int WeaponIndex = Random.Range(0, itemDrops.Length);
         dropAmount = itemDrops[WeaponIndex].dropAmount;

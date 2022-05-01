@@ -35,7 +35,7 @@ public class SupplyBox : MonoBehaviourPunCallbacks
     }
    
 
-
+    /*
     private void OnTriggerEnter(Collider other)
     {
         
@@ -46,6 +46,13 @@ public class SupplyBox : MonoBehaviourPunCallbacks
             }
         
        
+    }
+    */
+
+    public void PickUpSupplyBox()
+    {
+        MaterialSlot.instance.addMaterialAmount();
+        photonView.RPC("PickUp", RpcTarget.All);
     }
     [PunRPC]
 

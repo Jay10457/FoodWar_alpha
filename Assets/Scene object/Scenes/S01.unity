@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props_L_SupplyBox (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7379216077894170785, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
+      propertyPath: m_TagString
+      value: SupplyBox
+      objectReference: {fileID: 0}
     - target: {fileID: 7864390240046932507, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -259,6 +263,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props_L_SupplyBox
       objectReference: {fileID: 0}
+    - target: {fileID: 7379216077894170785, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
+      propertyPath: m_TagString
+      value: SupplyBox
+      objectReference: {fileID: 0}
     - target: {fileID: 7864390240046932507, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -319,6 +327,10 @@ PrefabInstance:
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_Name
       value: Props_L_LotteryBox (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
+      propertyPath: m_TagString
+      value: ItemBox
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -382,7 +394,7 @@ GameObject:
   - component: {fileID: 310020930}
   - component: {fileID: 310020929}
   - component: {fileID: 310020928}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,7 +554,7 @@ GameObject:
   - component: {fileID: 492745290}
   - component: {fileID: 492745289}
   - component: {fileID: 492745288}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -642,7 +654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_TagString
-      value: Obstacle
+      value: ItemBox
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -934,6 +946,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props_L_SupplyBox (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7379216077894170785, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
+      propertyPath: m_TagString
+      value: SupplyBox
+      objectReference: {fileID: 0}
     - target: {fileID: 7864390240046932507, guid: bb43085924e225547b3637ec9deabfc1, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -1026,7 +1042,7 @@ GameObject:
   - component: {fileID: 885671941}
   - component: {fileID: 885671940}
   - component: {fileID: 885671939}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1151,7 +1167,7 @@ GameObject:
   - component: {fileID: 959342666}
   - component: {fileID: 959342665}
   - component: {fileID: 959342664}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1410,7 +1426,7 @@ GameObject:
   - component: {fileID: 1102587240}
   - component: {fileID: 1102587239}
   - component: {fileID: 1102587238}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1683,7 +1699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_TagString
-      value: Obstacle
+      value: ItemBox
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1942,7 +1958,7 @@ GameObject:
   - component: {fileID: 1412568767}
   - component: {fileID: 1412568766}
   - component: {fileID: 1412568765}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2188,7 +2204,7 @@ GameObject:
   - component: {fileID: 1642974453}
   - component: {fileID: 1642974452}
   - component: {fileID: 1642974451}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7219,7 +7235,7 @@ GameObject:
   - component: {fileID: 2026219046}
   - component: {fileID: 2026219045}
   - component: {fileID: 2026219044}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -7379,7 +7395,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_TagString
-      value: Obstacle
+      value: ItemBox
       objectReference: {fileID: 0}
     - target: {fileID: 7147313246848752848, guid: 13fd5c2d2651b1842bc462365ef29d13, type: 3}
       propertyPath: m_StaticEditorFlags

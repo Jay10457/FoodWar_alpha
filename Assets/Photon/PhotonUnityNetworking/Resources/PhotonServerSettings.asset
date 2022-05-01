@@ -28,83 +28,59 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: jp
+  DevRegion: kr
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - AddTimeRpc
   - ApplyStun
   - ClickRpc
+  - ConfirmAddMaterialRequest
+  - ConfirmAddScore
+  - ConfirmPickUpDish
+  - ConfirmRefrashRequest
+  - ConfirmRemoveMaterialRequest
+  - ConfirmStartCookRequest
+  - CookDone
   - DestroyRpc
   - DestroySpaceship
   - DropFX
   - EquipItem
   - Fire
   - GetPos
+  - HitFx
+  - JumpAnimAndFX
+  - PickUp
+  - PickUpRequest
   - PickUpSend
   - PotionFX
   - RespawnSpaceship
-  - RespondRPCCooker
+  - RespondCloseRPCCooker
+  - RespondOpenRPCCooker
   - RPCcurrentWeaponId
   - RpcKillMe
   - RPCSetUpPickupable
-  - SendAnim
-  - SendRequest
-  - SetCharacter
-  - SetOpenClose
-  - SetPlayerName
-  - SetSkin
-  - StartGameCountDown
-  - StunAnim
-  - unEquipItem
-  - RespondCloseRPCCooker
-  - RespondOpenRPCCooker
-  - SendCloseRequest
-  - SendOpenRequest
-  - SendAddMaterialRequest
-  - ReciveAddMaterialRequest
-  - ConfirmAddMaterialRequest
-  - SendRemoveMaterialRequest
-  - ConfirmRemoveMaterialRequest
-  - ConfirmRefrashRequest
-  - SendRefreshRequest
-  - ConfirmRefrashOthersRequest
-  - RefrashOthersUIRequest
-  - ConfirmStartCookRequest
-  - StartCookRequest
-  - EquipDish
-  - ConfirmPickUpDish
-  - PickUpRequest
   - RPCShoot
-  - RPCThorow
-  - GameTimer
-  - GameTimerBegin
-  - GameOver
-  - SendAddScoreRequestToServer
-  - ConfirmAddScoreRequest
-  - GreenScore
-  - RedScore
-  - ScoreFX
-  - CookDone
-  - DishBeTake
-  - HitFx
-  - DashingFx
-  - SendAddScoreRequest
-  - StunFX
-  - ConfirmAddScore
-  - SendFX
-  - SendFinalScoreToAll
-  - SendGameResultCal
-  - AddTimeRpc
-  - SprintFXAndAni
-  - StunFXAndAni
-  - Jump
-  - JumpAnim
-  - Spawn
-  - PickUp
-  - JumpAnimAndFX
   - RPCStartGame
+  - RPCThorow
+  - SendAddMaterialRequest
+  - SendAddScoreRequest
+  - SendAnim
+  - SendCloseRequest
+  - SendFinalScoreToAll
+  - SendFX
+  - SendGameResultCal
+  - SendOpenRequest
+  - SendRefreshRequest
+  - SendRemoveMaterialRequest
+  - SetCharacter
+  - SetPlayerName
+  - Spawn
+  - SprintFXAndAni
+  - StartCookRequest
+  - StunFXAndAni
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 1

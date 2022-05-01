@@ -1,7 +1,8 @@
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections;
+using System.Collections.Generic;
 public class HotBar : MonoBehaviourPunCallbacks
 {
     public InventorySlot[] slots = null;
@@ -28,7 +29,7 @@ public class HotBar : MonoBehaviourPunCallbacks
     Vector3 itemSpawnPos = Vector3.zero;
 
     InventoryManager IM;
-    
+
 
 
     int currentSlotIndex;
@@ -38,7 +39,7 @@ public class HotBar : MonoBehaviourPunCallbacks
         get { return RoomManager.instance.isDishSlotFull; }
         set { RoomManager.instance.isDishSlotFull = value; }
     }
-    
+
     private void Start()
 
     {
@@ -52,7 +53,7 @@ public class HotBar : MonoBehaviourPunCallbacks
         dishes = this.gameObject.GetComponentsInChildren<DishBase>();
         PV = this.gameObject.GetPhotonView();
         cookController = this.GetComponent<CookController>();
-       
+
         //weapons[0].gameObject.AddComponent<ProjectileWeapon>();
         for (int i = 0; i < weapons.Length; i++)
         {
@@ -62,8 +63,8 @@ public class HotBar : MonoBehaviourPunCallbacks
         {
             dishes[i].gameObject.SetActive(false);
         }
-        //InventoryManager.AddItemToInventory(ItemManager.instance.GetMaterialById(Random.Range(10, 37)), 1);
-        
+        InventoryManager.AddItemToInventory(ItemManager.instance.GetMaterialById(Random.Range(10, 37)), 1);
+
 
     }
     private void Awake()
@@ -74,10 +75,12 @@ public class HotBar : MonoBehaviourPunCallbacks
             instance = this;
         }
         itemManager = ItemManager.instance;
-        
-        
-        
+
+
+
     }
+
+
     private void Update()
     {
         if (PV.IsMine)
@@ -109,45 +112,37 @@ public class HotBar : MonoBehaviourPunCallbacks
                 }
 
             }
-            if (Input.mouseScrollDelta.y < 0)
-            {
-                if (currentSlotIndex >= slots.Length - 1)
-                    currentSlotIndex = 0;
-                else
-                    currentSlotIndex++;
-            }
-            else if (Input.mouseScrollDelta.y > 0)
-            {
-                if (currentSlotIndex <= 0)
-                    currentSlotIndex = slots.Length - 1;
-                else
-                    currentSlotIndex--;
 
-            }
+
+
+            SwitchItem();
+
+
+
         }
         if (lastItem != slots[currentSlotIndex].currentItem)
         {
             lastItem = slots[currentSlotIndex].currentItem;
             if (PV.IsMine)
             {
-                //Destroy previously equipped item
-                if (currentEquip)
-                {
-
-                    photonView.RPC("unEquipItem", RpcTarget.All);
-                }
+                // 搞定手
                 //Instantiate equip item if currentItem type = Hand
                 if (slots[currentSlotIndex].currentItem != null/*&& slots[currentSlotIndex].currentItem.type == Item.Type.Weapons*/)
                 {
                     playerIK.isEquipWeapon = true;
-                    if (slots[currentSlotIndex].currentItem.type == Item.Type.weapons)
+
+
+                    // 搞定手上的東西
+
+                    if (slots[currentSlotIndex].currentItem.type == Item.Type.weapons || slots[currentSlotIndex].currentItem.type == Item.Type.dish)
                     {
-                        photonView.RPC("EquipItem", RpcTarget.All, slots[currentSlotIndex].currentItem.Id);
+                        SendEquipItemRPC(slots[currentSlotIndex].currentItem.Id);
                     }
-                    if (slots[currentSlotIndex].currentItem.type == Item.Type.dish)
-                    {
-                        photonView.RPC("EquipDish", RpcTarget.All, slots[currentSlotIndex].currentItem.Id);
-                    }
+                   
+                    
+                    //Debug.LogError(slots[currentSlotIndex].currentItem.Id);
+
+
                     scoreController.currentDishId = slots[currentSlotIndex].currentItem.Id;
                     playerIK.currentWeaponId = slots[currentSlotIndex].currentItem.Id;
                     cookController.currentItemIndex = slots[currentSlotIndex].currentItem.Id;
@@ -155,14 +150,14 @@ public class HotBar : MonoBehaviourPunCallbacks
                 }
                 else if (slots[currentSlotIndex].currentItem == null)
                 {
+                    SendEquipItemRPC(-1);
                     scoreController.currentDishId = -1;
                     playerIK.currentWeaponId = -1;
                     cookController.currentItemIndex = -1;
                     playerIK.isEquipWeapon = false;
                 }
-               
             }
-          
+
 
 
         }
@@ -173,22 +168,87 @@ public class HotBar : MonoBehaviourPunCallbacks
                 DropItem(slots[currentSlotIndex].currentItem, slots[currentSlotIndex].currentItemAmount);
                 photonView.RPC("DropFX", RpcTarget.All, itemSpawnPos);
                 IM.RemoveCurrentItem(currentSlotIndex, slots[currentSlotIndex].currentItem, slots[currentSlotIndex].currentItemAmount);
-               
-                
+
+
             }
-           
 
 
-            
+
+
 
 
         }
-        
-        
-        
+
+
+
 
     }
 
+    bool isISendEquipItemRPC = false;
+    int tempSendEquipItemRPCID = -999;
+    float lastSendEquipItemRPCTime = 0f;
+    void SendEquipItemRPC(int id)
+    {
+        tempSendEquipItemRPCID = id;
+        EquipItem(id);
+        if (isISendEquipItemRPC == false)
+        {
+            isISendEquipItemRPC = true;
+            StartCoroutine(ISendEquipItemRPC());
+        }
+    }
+  
+    IEnumerator ISendEquipItemRPC()
+    {
+        while(true)
+        {
+            // 如果有ID要送
+            if (tempSendEquipItemRPCID != -999)
+            {
+                // 檢查時間要不要卡
+                while (Time.time - lastSendEquipItemRPCTime < 0.5f)
+                {
+                    yield return null;
+                }
+                // 送出
+                lastSendEquipItemRPCTime = Time.time;
+                photonView.RPC("EquipItem", RpcTarget.Others, tempSendEquipItemRPCID);
+               
+                // 重置ID
+                tempSendEquipItemRPCID = -999;
+            }
+            yield return null;
+        }
+    }
+
+   
+
+   
+
+
+
+    
+
+    float lastChangeCurrentSlotIndexTime = 0f;
+    [SerializeField] float currentSlotIndexCD = 0.1f;
+    private void SwitchItem()
+    {
+        if (Input.mouseScrollDelta.y < 0)
+        {
+            if (currentSlotIndex >= slots.Length - 1)
+                currentSlotIndex = 0;
+            else
+                currentSlotIndex++;
+        }
+        else if (Input.mouseScrollDelta.y > 0)
+        {
+            if (currentSlotIndex <= 0)
+                currentSlotIndex = slots.Length - 1;
+            else
+                currentSlotIndex--;
+        }
+
+    }
     public void WeaponUse()
     {
         IM.RemoveCurrentItem(currentSlotIndex, slots[currentSlotIndex].currentItem, 1);
@@ -201,24 +261,33 @@ public class HotBar : MonoBehaviourPunCallbacks
     [PunRPC]
     private void EquipItem(int itemId)
     {
-        currentEquip = weapons[itemId].gameObject;
-        weapons[itemId].gameObject.SetActive(true);
-       
-    }
-    [PunRPC]
-    private void EquipDish(int dishId)
-    {
+        // 無腦關手上的東西
         
-        currentEquip = dishes[dishId - 10].gameObject;
-        dishes[dishId - 10].gameObject.SetActive(true);
+        unEquipItem();
+       
+        if (itemId != -1)
+        {
+            if (itemId < 9)
+            {
+                // 如果這欄位有東西就拿出來
+                weapons[itemId].gameObject.SetActive(true);
+                currentEquip = weapons[itemId].gameObject;
+            }
+            else
+            {
+                dishes[itemId - 10].gameObject.SetActive(true);
+                currentEquip = dishes[itemId - 10].gameObject;
+            }
+        }
 
     }
-    [PunRPC]
+  
     private void unEquipItem()
     {
-        currentEquip.gameObject.SetActive(false);
+        if (currentEquip)
+            currentEquip.gameObject.SetActive(false);
     }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         if (photonView.IsMine)
@@ -234,32 +303,32 @@ public class HotBar : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                   itemPick.KillMe();
+                    itemPick.KillMe();
                 }
             }
         }
-       
+
     }
-    
+
 
     public void DropItem(Item item, int amount, bool removeCurrentItem = true)
     {
-      
+
         if (item == null)
             return;
         Vector3 random = new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0f, 0.2f), Random.Range(-0.2f, 0.2f));
         Vector3 direction = playerPos.forward + random;
         itemSpawnPos = playerPos.position + direction * 5;
-        
 
-       
+
+
         GameObject dropTemp = PhotonNetwork.Instantiate(item.name, itemSpawnPos, Quaternion.identity);
         ItemPickUp tempItemPickUp = dropTemp.GetComponent<ItemPickUp>();
         // 要求該物件改變(該物件自己同步)
         tempItemPickUp.SetUpPickupable(item.name, amount);
         tempItemPickUp.StartCoroutine(tempItemPickUp.countDownToDetroy());
 
-        
+
         if (removeCurrentItem)
         {
             currentItem = null;
@@ -267,8 +336,8 @@ public class HotBar : MonoBehaviourPunCallbacks
 
         }
 
-        
+
     }
-   
+
 }
 

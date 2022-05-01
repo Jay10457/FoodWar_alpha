@@ -167,7 +167,7 @@ Vector3 sphere
 
 
         }
-        else if (!photonView.IsMine)
+        if (!photonView.IsMine)
         {
             rb.isKinematic = true;
         }
@@ -207,7 +207,8 @@ Vector3 sphere
         }
         else if(photonView.IsMine && RoomManager.instance.isPause)
         {
-            playerMoveInput = new Vector3(0, rb.velocity.y, 0);
+            //playerMoveInput = new Vector3(0, rb.velocity.y, 0);
+            rawInput = Vector2.zero;
             _yaw = 0;
             _pitch = 0;
         }
@@ -220,16 +221,22 @@ Vector3 sphere
             // 鏡像接受旋轉
             this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.Euler(0f, rpcY, 0f), Time.deltaTime * 10f);
         }
-    }
 
+        // 無論本撙逕向都吃
+        playerMoveInput.x = Mathf.Lerp(playerMoveInput.x, rawInput.x, Time.deltaTime * 10f);
+        playerMoveInput.z = Mathf.Lerp(playerMoveInput.z, rawInput.y, Time.deltaTime * 10f);
+    }
+    Vector2 rawInput = Vector2.zero;
     void InputMagnitude(bool _stun)
     {
         
 
         if (!_stun)
         {
-
-            playerMoveInput = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            // 操作值
+            rawInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            
+            //= new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
             if (!_isCookUiOpen)
             {
@@ -263,15 +270,18 @@ Vector3 sphere
 
             Vcam.Follow = camLookAt;
             CameraRotation();
-            AnimatePlayer();
             SyncAnime();
 
         }
+        AnimatePlayer();
+        
 
     }
 
     float 上次送出時間 = 0f;
     Vector3 上一幀的位置 = Vector3.zero;
+    float lastRotation;
+    
     /// <summary>
     /// Move the Character
     /// </summary>
@@ -298,13 +308,30 @@ Vector3 sphere
 
         Vector3 這一幀移動多少 =  ((rb.position - 上一幀的位置) != Vector3.zero)? (rb.position - 上一幀的位置) / Time.fixedDeltaTime : Vector3.zero;
         上一幀的位置 = rb.position;
+        float lastRotate = this.transform.rotation.eulerAngles.y - lastRotation;
 
-        if (Time.time > 上次送出時間 + 0.1f)
+
+        if (這一幀移動多少 != Vector3.zero || lastRotate != 0)
         {
-            上次送出時間 = Time.time;
+            if (Time.time > 上次送出時間 + 0.1f)
+            {
+                上次送出時間 = Time.time;
 
-            photonView.RPC("GetPos", RpcTarget.Others, rb.position, 這一幀移動多少, this.transform.rotation.eulerAngles.y);
+                photonView.RPC("GetPos", RpcTarget.Others, rb.position, 這一幀移動多少, this.transform.rotation.eulerAngles.y);
+                lastRotation = this.transform.rotation.eulerAngles.y;
+            }
         }
+        else
+        {
+            if (Time.time > 上次送出時間 + 0.2f)
+            {
+                上次送出時間 = Time.time;
+
+                photonView.RPC("GetPos", RpcTarget.Others, rb.position, 這一幀移動多少, this.transform.rotation.eulerAngles.y);
+                lastRotation = this.transform.rotation.eulerAngles.y;
+            }
+        }
+        
     }
     /// <summary>
     ///  Jump
@@ -453,15 +480,13 @@ Vector3 sphere
     }
     private void SyncAnime()
     {
-        float 長度 = Vector2.Distance(lastAnim, new Vector2(playerMoveInput.x, playerMoveInput.z));
+        float 長度 = Vector2.Distance(lastAnim, rawInput);
         if (長度 > 0.05f)
         {
-            lastAnim = new Vector2(playerMoveInput.x, playerMoveInput.z);
+            lastAnim = rawInput;
             // 同步
-            photonView.RPC("SendAnim", RpcTarget.Others, lastAnim.x, lastAnim.y);
+            photonView.RPC("SendAnim", RpcTarget.All, rawInput.x, rawInput.y);
         }
-
-
     }
     float MOUSE_SENTIVY
     {
@@ -497,9 +522,6 @@ Vector3 sphere
     {
         ani.SetFloat("MoveX", playerMoveInput.x);
         ani.SetFloat("MoveZ", playerMoveInput.z);
-
-
-
     }
 
    
@@ -578,6 +600,22 @@ Vector3 sphere
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (_isGameStart && photonView.IsMine)
+        {
+            if (other.gameObject.CompareTag("ItemBox"))
+            {
+                other.GetComponent<ItemBox>().RandomWeapon();
+            }
+            if (other.gameObject.CompareTag("SupplyBox") && MaterialSlot.instance.materialAmount < 5)
+            {
+                other.GetComponent<SupplyBox>().PickUpSupplyBox();
+            }
+        }
+       
+    }
+
 
     #region ApplyStun
     private void OnCollisionEnter(Collision collision)
@@ -604,7 +642,7 @@ Vector3 sphere
         _yaw = 0f;
         _pitch = 0f;
         float startTime = Time.time;
-        playerMoveInput = Vector2.zero;
+        rawInput = Vector2.zero;
 
 
         while (Time.time < startTime + stunTime)
@@ -708,8 +746,13 @@ Vector3 sphere
     [PunRPC]
     public void SendAnim(float animX, float animZ)
     {
-        ani.SetFloat("MoveX", animX);
-        ani.SetFloat("MoveZ", animZ);
+        rawInput.x = animX;
+        rawInput.y = animZ;
+        //ani.SetFloat("MoveX", animX);
+        //ani.SetFloat("MoveZ", animZ);
     }
+    
+    
+    
     #endregion
 }

@@ -6,7 +6,6 @@ using Photon.Realtime;
 //[RequireComponent(typeof(PhotonView))]
 public class PlayerIK : MonoBehaviourPunCallbacks
 {
-
     [SerializeField] Animator animator;
     [SerializeField] Vector3 lookAt = Vector3.zero;
 
@@ -47,7 +46,7 @@ public class PlayerIK : MonoBehaviourPunCallbacks
         {
             _currentWeaponId = value;
             if (PV.IsMine)
-                photonView.RPC("RPCcurrentWeaponId", RpcTarget.Others, value);
+                SendWeaponIdRPC(_currentWeaponId);
         }
     }
     int _currentWeaponId = -1;
@@ -56,6 +55,46 @@ public class PlayerIK : MonoBehaviourPunCallbacks
  
     public bool isEquipWeapon;
 
+
+    bool isISendWeaponIdRPC = false;
+    int tempSendWeaponRPCID = -999;
+    float lastSendWeaponIdRPCTime = 0f;
+    private void SendWeaponIdRPC(int weaponId)
+    {
+        tempSendWeaponRPCID = weaponId;
+       
+        if (isISendWeaponIdRPC == false)
+        {
+            isISendWeaponIdRPC = true;
+            StartCoroutine(ISendWeaponIdRPC());
+        }
+        
+    }
+    
+    IEnumerator ISendWeaponIdRPC()
+    {
+        while (true)
+        {
+            // 如果有ID要送
+            if (tempSendWeaponRPCID != -999)
+            {
+                // 檢查時間要不要卡
+                while (Time.time - lastSendWeaponIdRPCTime < 0.5f)
+                {
+                    yield return null;
+                }
+                // 送出
+                lastSendWeaponIdRPCTime = Time.time;
+                
+                photonView.RPC("RPCcurrentWeaponId", RpcTarget.Others, tempSendWeaponRPCID);
+              
+
+                // 重置ID
+                tempSendWeaponRPCID = -999;
+            }
+            yield return null;
+        }
+    }
     private void Awake()
     {
         isIKActive = true;
@@ -83,29 +122,9 @@ public class PlayerIK : MonoBehaviourPunCallbacks
         if (isIKActive)
         {
 
-
-
             WeaponIK();
 
-
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
 
 
 
