@@ -8,7 +8,6 @@ public class ScoreBarAndTimer : MonoBehaviour
 {
     public static ScoreBarAndTimer instance;
     public TMP_Text timerText;
-    public Slider scoreSlider;
     public TMP_Text r_Score;
     public TMP_Text g_Score;
     private void Awake()

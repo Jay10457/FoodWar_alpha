@@ -9,7 +9,7 @@ public class WinOrLost : MonoBehaviour
     public Animator gameOverAni;
     public TMP_Text rScore;
     public TMP_Text gScore;
-    public Slider bar;
+  
     public static WinOrLost instance;
     
     private void Awake()

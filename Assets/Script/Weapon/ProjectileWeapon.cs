@@ -16,8 +16,24 @@ public class ProjectileWeapon : MonoBehaviourPunCallbacks
     [SerializeField] float timeBetweenShoot;
     [SerializeField] Transform firePoint;
     [SerializeField] Camera cam;
-  
 
+    private new void OnEnable()
+    {
+        if (photonView.IsMine)
+        {
+            CrossHairUI.instance.gameObject.SetActive(true);
+        }
+        
+       
+    }
+    private new void OnDisable()
+    {
+        if (photonView.IsMine)
+        {
+            CrossHairUI.instance.gameObject.SetActive(false);
+        }
+        
+    }
 
     [SerializeField] CrossHair crossHair;
     bool _isStun
@@ -42,6 +58,7 @@ public class ProjectileWeapon : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             ShootInput();
+           
         }
         
     }
@@ -79,9 +96,11 @@ public class ProjectileWeapon : MonoBehaviourPunCallbacks
         GameObject temp = Instantiate(bullet, startPos, Quaternion.Euler(startDir));
         Bullet script = temp.GetComponent<Bullet>();
         // 求出訊息發送到接收的時間
+        script.gameObject.AddComponent<PhotonView>();
         double lag = PhotonNetwork.Time - info.SentServerTime;
         script.speed = shootForce;
         script.LagMove(lag, this.transform.root.GetInstanceID());
+        
     }
 
     void ResetShoot()

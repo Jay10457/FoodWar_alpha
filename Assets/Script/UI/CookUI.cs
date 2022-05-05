@@ -89,42 +89,56 @@ public class CookUI : MonoBehaviour
             _ingredientSlots[i].ButtomOnClick -= RemoveAndAddMaterialWithIndex;
 
 
-        }//EventManager.instance.UIToCooker
+        }
+        Cursor.lockState = CursorLockMode.Locked;
+        //EventManager.instance.UIToCooker
     }
    
    
     private void RemoveAndAddMaterialWithIndex(int index)
     {
-        if (_ingredientSlots[index].currentItem != null)
+        if (myPlayerRef.currentCooker != null)
         {
-            myPlayerRef.currentCooker.RemoveMaterialRPC(covertedItemPacketJson(), index);
-            SFXPlayer.PlayOneShot(removeSFX);
-        }
-        else
-        {
-            if (MaterialSlot.instance.materialAmount > 0)
+            if (_ingredientSlots[index].currentItem != null)
             {
-                myPlayerRef.currentCooker.PutMaterialRPC(covertedItemPacketJson(), index);
-                SFXPlayer.PlayOneShot(putSFX);
-                
+                myPlayerRef.currentCooker.RemoveMaterialRPC(covertedItemPacketJson(), index);
+                SFXPlayer.PlayOneShot(removeSFX);
             }
             else
             {
-                MaterialSlot.instance.AmountTextPop();
-                SFXPlayer.PlayOneShot(noMatErrorSFX);
+                if (MaterialSlot.instance.materialAmount > 0)
+                {
+                    myPlayerRef.currentCooker.PutMaterialRPC(covertedItemPacketJson(), index);
+                    SFXPlayer.PlayOneShot(putSFX);
+
+                }
+                else
+                {
+                    MaterialSlot.instance.AmountTextPop();
+                    SFXPlayer.PlayOneShot(noMatErrorSFX);
+                }
+
             }
-            
         }
+        
 
     }
     private void RefreshUIFromServer(string _userId)
     {
-        myPlayerRef.currentCooker.RefreshUIFromServerRPC(_userId);
+        if(myPlayerRef.currentCooker != null)
+        {
+            myPlayerRef.currentCooker.RefreshUIFromServerRPC(_userId);
+        }
+        
 
     }
     private void StartCookRequestToServer(int cookerId)
     {
-        myPlayerRef.currentCooker.StartCookRPC(cookerId);
+        if (myPlayerRef.currentCooker != null)
+        {
+            myPlayerRef.currentCooker.StartCookRPC(cookerId);
+        }
+      
     }
 
     private void InitPacket()

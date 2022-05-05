@@ -49,11 +49,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks
 
         ScoreBarAndTimer.instance.g_Score.gameObject.SetActive(false);
         ScoreBarAndTimer.instance.r_Score.gameObject.SetActive(false);
-        ScoreBarAndTimer.instance.scoreSlider.gameObject.SetActive(false);
+      
 
         WinOrLost.instance.rScore.text = Mathf.Abs(_r_Score).ToString();
         WinOrLost.instance.gScore.text = _g_Score.ToString();
-        WinOrLost.instance.bar.value = (float)(Mathf.Abs(_r_Score) + 10) / (float)(Mathf.Abs(_r_Score) + 10 + (_g_Score + 10));
+       
 
         if (teamVaule == FoodTeam.GOOD && _g_Score > Mathf.Abs(_r_Score) || teamVaule == FoodTeam.BAD && _g_Score < Mathf.Abs(_r_Score))
         {
@@ -113,15 +113,10 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         }
 
        
-        ScoreBoard(_r_Score, _g_Score);
+      
     }
 
-    private void ScoreBoard(int r, int g)
-    {
-      
-        ScoreBarAndTimer.instance.scoreSlider.value = (float)(Mathf.Abs(r) + 10) / (float)(Mathf.Abs(r) + 10 + (g + 10));
-       
-    }
+   
     
     [PunRPC]
     private void SendAddScoreRequest(int _score)

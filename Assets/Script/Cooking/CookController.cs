@@ -77,7 +77,7 @@ public class CookController : MonoBehaviourPunCallbacks
     private void SendCookUIRequest()
     {
         if (Input.GetKeyDown(KeyCode.E) && inCookerArea && !RoomManager.instance.isCookUiOpen && !currentCooker.cookingProgress.gameObject.activeSelf &&
-            !currentCooker.resultIconDisplay.gameObject.activeSelf)
+            !currentCooker.resultIconDisplay.gameObject.activeSelf && currentCooker != null)
         {
             //Open
             if (PV.IsMine)

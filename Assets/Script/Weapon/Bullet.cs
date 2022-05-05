@@ -1,13 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
+
+
 
 public class Bullet : MonoBehaviour
 {
+
+   
     public float speed = 0f;
     private void Start()
     {
         Invoke("DetroySelf", 10f);
+        
+        
     }
 
     private void DetroySelf()
@@ -37,20 +45,37 @@ public class Bullet : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
     }
+    
     [SerializeField] GameObject impactParticle = null;
     [SerializeField] ParticleSystem hitFX;
+    int myId;
+    int myShooterId;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.root.GetInstanceID() == shooterId)
+        myId = other.transform.root.GetInstanceID();
+        if (myId == shooterId)
+        {
+            
             return;
+        }
+
+
+
+
+       
+
 
         PlayerController pc = other.transform.root.GetComponent<PlayerController>();
         if (pc != null)
         {
             pc.TakeGunDamage();
             Instantiate(hitFX, this.gameObject.transform.position, Quaternion.identity);
+            
+          
         }
 
         DetroySelf();
     }
+
+  
 }

@@ -336,7 +336,7 @@ Vector3 sphere
     /// <summary>
     ///  Jump
     /// </summary>
-
+    
     private void Jump()
     {
        
@@ -574,6 +574,7 @@ Vector3 sphere
 
     public void TakeGunDamage()
     {
+        
         // 如果受傷的是本尊
         if (photonView.IsMine)
         {
@@ -581,6 +582,7 @@ Vector3 sphere
             oilBlindPower = (float)Mathf.CeilToInt(oilBlindPower);
             PlayerHUD.instance.oilGunFX.SetFloat("OilBlindPower", oilBlindPower);
         }
+     
     }
     void UpdateOilBlindAnim()
     {

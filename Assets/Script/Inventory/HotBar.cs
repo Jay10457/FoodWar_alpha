@@ -63,7 +63,7 @@ public class HotBar : MonoBehaviourPunCallbacks
         {
             dishes[i].gameObject.SetActive(false);
         }
-        InventoryManager.AddItemToInventory(ItemManager.instance.GetMaterialById(Random.Range(10, 37)), 1);
+       
 
 
     }
